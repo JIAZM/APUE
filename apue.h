@@ -9,3 +9,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <dirent.h>
+#include <syslog.h>
+#include <errno.h>
+

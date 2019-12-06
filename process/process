@@ -121,16 +121,42 @@
 	clock_t类型为clock ticks数(滴答数 / 系统心跳)，使用宏
 		sysconf(_SC_CLK_TCK);可以检测每秒钟有多少system ticks数
 
-10- 守护进程
+10- 守护进程	写守护进程一定要写系统日志！！！！！
+
 	守护进程一般脱离控制终端而存在
+	PPID为1、PID、PGID、SID相同，并且TTY项为？的进程是守护进程
 	守护进程一般都是一个会话的leader
 
-	会话：session
+	会话：session,标识sid
 		一个终端的登录产生了一个标准的会话形式
 
 	终端：
 		真正意义上的终端是一个本设备	真正的终端只负责输入与输出
 
+	前台进程组 / 后台进程组
+		前台进程组能够使用标准输入	如果企图把标准输入给后台进程，将会杀掉后台运行的进程
+	
+	#include <unistd.h>
+	/**********标准UNIX调用************/
+	pid_t setsid(void);
+	pid_t getpgid(pid_t pid);	//获取某一个指定进程的进程组ID
+	pid_t setpgid(pid_t pid);	//设置指定进程到指定进程组中
+		调用方会成为当前进程组的leader并且脱离控制终端
+	/**********方言************/
+	pid_t getpgrp(void);	//返回当前进程所在进程组的ID
+	pid_t getpgrp(psid_t pid);	//查看一个指定的进程所属的进程组是哪一个
+
+#	单实例守护进程：锁文件/var/run/<名字>.pid  
+#	启动脚本文件：	/etc/rc.d/rc.local
+
+
 
 11-	系统日志的书写
+	syslogd服务
+	系统日志格式由syslogd服务来控制
 
+	#include <syslog.h>
+
+	void openlog(const char *ident, int option, int facility);
+	void syslog(int [riority, const char *format, ...);
+	void closelog(void);
