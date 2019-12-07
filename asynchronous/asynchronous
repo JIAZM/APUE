@@ -53,8 +53,10 @@
 
 		#include <unistd.h>
 		unsigned int alarm(unsigned int seconds);	#//没办法实现多任务的alarm
+		#涉及时钟信号的情况时，signal()要发生在alarm()前
 		pause();
 		#在某些环境下sleep()是用alarm()+pause()封装实现的
+		#使用alarm()函数实现slow cat流控
 
 		abort();
 		system();
