@@ -50,8 +50,12 @@
 	
 		int kill(pid_t pid, int sig);	//给一个进程发送信号
 		int raise(int sig);	//给当前进程发送一个信号
-		alarm();
+
+		#include <unistd.h>
+		unsigned int alarm(unsigned int seconds);	#//没办法实现多任务的alarm
 		pause();
+		#在某些环境下sleep()是用alarm()+pause()封装实现的
+
 		abort();
 		system();
 
