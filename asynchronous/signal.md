@@ -108,7 +108,7 @@
 		setitimer();	// 替换alarm()函数  
   
 		# getcontext()与setcontext()的问题  
-		#include <ucontext.h>  
+		#include <ucontext.h>
 		int getcontext(ucontext_t *ucp);	//获取一个现场，后续工作可以切换到其他现场工作  
 		int setcontext(const ucontext_t *ucp);	//还原一个可执行的现场  
 		##在struct sigaction中的三参成员第三个（void *）的参数其实是 ucontext *ucp 类型  
@@ -116,7 +116,9 @@
   
 # 实时信号  
 10-	实时信号相关内容  
-	标准信号会丢失  标准信号是为定义行为
+	标准信号会丢失  标准信号是为定义行为  
 	同时有标准信号、实时信号时，先响应标准信号，后响应实时信号  
-	信号位置:/usr/include/bits/signum.h
+	信号位置:/usr/include/bits/signum.h  
 	## 实时信号会排队，标准信号只产生一次  
+	$ulimit -a命令中，pending signal为实时信号的数量，可修改  
+
