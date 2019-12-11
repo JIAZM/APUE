@@ -10,27 +10,33 @@
 	>***openmp线程***  
 	>***线程标识:pthread_t - 只是一个标识，具体什么类型各家自己实现***  
 ---  
-+	__线程的创建__  
-	```#include <pthread.h>```  
-	```int pthread_equal(pthread_t t1, pthread_t t2);```
-	```pthread_t pthread_self(void);```  
-	```int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(start_routine)(void *), void *arg);```  
++ __线程的创建__  
+	> `#include <pthread.h>`  
+	 `int pthread_equal(pthread_t t1, pthread_t t2);`  
+	 `pthread_t pthread_self(void);`  
+	 `int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(start_routine)(void *), void *arg);`  
+  
+	- 使用strerror();对错误代码进行解析
+	>`fprintf(stderr, "pthread_create():%s \n", strerror(err));`  
+	- 线程的调度取决于调度器的调度策略  
 
-	__线程的终止__  
+## ***回忆 - 进程终止的八种方式***  
 
-	__栈的清理__  
+- __线程的终止__  
 
-	__线程的取消选项__  
+- __栈的清理__  
 
-+	__线程同步__  
+- __线程的取消选项__  
 
-+	__线程属性__  
++ __线程同步__  
+
++ __线程属性__  
 	
-	__线程同步的属性__  
+- __线程同步的属性__  
 
-+	__重入__  
++ __重入__  
 
-	__线程与信号__  
+- __线程与信号__  
 
-	__线程与fork__  
+- __线程与fork__  
 
