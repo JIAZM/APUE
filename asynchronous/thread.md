@@ -59,9 +59,40 @@
 > + 当前空间能创建出多少线程个数，取决于外在的资源量  
 > + 但在64位系统中最先消耗完的可能是进程号  
 
-
-
 + __线程同步__  
+	- 互斥量  
+		>类型：  
+		>pthread_mutex_t  
+		- 创建互斥量  
+	`int pthread_mutex_init(pthread_mutex_t *restrict mutex, const pthread_mutexattr_t *restrict attr);`  
+		- 销毁互斥量  
+	`int pthread_mutex_destroy(pthread_mutex_t *mutex);`  
+		- 互斥量加锁  
+	`int pthread_mutex_lock(pthread_mutex_t *mutex)`  //等锁，死等  
+	`int pthread_mutex_trylock(pthread_mutex_t *mutex);`  //非阻塞加锁  
+		- 互斥量解锁  
+	`pthread_mutex_unlock(pthread_mutex_t *mutex);`  
+
+	- 条件变量 - 实现通知  
+		>类型:  
+		>pthread_cond_t cond = PTHREAD_COND_INITIALIZER;  
+		- 创建条件变量  
+	`int pthread_cond_init(pthread_cond_t *restrict cond, const pthread_condattr_t *restrict attr);`  
+		- 销毁条件变量  
+	`int pthread_cond_destroy(pthread_cond_t *restrict *cond);`  
+		- 发消息  
+	`int pthread_cond_broadcast(pthread_con_t *cond);`//广播唤醒等待  
+	`int pthread_cond_signal(pthread_cond_t *cond);`//唤醒任意一个等待  
+		- 等待  
+	`int pthread_cond_timedwait()pthread_cond_t *restrict cond, pthread_mutex_t *mutex, const struct timespec *restrict abstime;`  
+	`int pthread_cond_wait(pthread_cond_t *restrict cond, pthread_mutex_t *restrict mutex);`  //死等  
+		## 通知的重点在于监听，有通知时一定要有wait，否则通知传达不到  
+
+	- 信号量  
+	>区别于互斥量，互斥量以独占形式来使用某一资源  
+	## 哲学家就餐问题  
+		- 使用互斥量 + 条件变量实现信号量  
+		>具体实现见视频94.6-2-5线程-信号量  
 
 + __线程属性__  
 	
@@ -72,4 +103,20 @@
 - __线程与信号__  
 
 - __线程与fork__  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
