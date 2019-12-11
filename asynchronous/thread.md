@@ -48,7 +48,7 @@
 	允许取消又分为：
 		- 异步cancel
 		- 推迟cancel(默认)：推迟至cancel点取消  
-			- POSOX定义的cancel点都是可能引发阻塞的系统调用  
+			- POSIX定义的cancel点都是可能引发阻塞的系统调用  
 	- 设置cancel点：
 		>`int pthread_setcancelstate(int state, int *oldstate);`  //设置是否允许取消  
 		>`int pthread_setcanceltype(int type, int *oldtype);`  //设置取消方式  
