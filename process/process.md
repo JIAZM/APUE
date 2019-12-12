@@ -1,7 +1,7 @@
 					进程的基本知识  
 已经进入多进程阶段，不涉及到并发  
   
-1-	进程标识符 pid  
+1. 进程标识符 pid  
 	类型pid_t	//传统意义上是有符号16位整型数  
 	$ ps axf  
 	$ ps axm  
@@ -13,7 +13,7 @@
 		getpid();  
 		getppid();  
   
-2-	进程如何产生  
+2. 进程如何产生  
 	pid_t fork(void);  
 		#include <unistd.h>  
 	父进程通过复制自己的方式形成子进程，关键字duplicating意味着拷贝、克隆、一模一样等含义  
@@ -35,7 +35,7 @@
   
 	父子进程的关系：除了最初子进程由父进程创建，其他的都相互独立，谁也不能到对方的空间拿什么东西  
   
-3-	进程的消亡以及释放资源  
+3. 进程的消亡以及释放资源  
 	#include <sys/types.h>  
 	#include <sys/wait.h>  
 	pid_t wait(int *status);	//死等  
@@ -52,7 +52,7 @@
 		3、池类分配  
   
   
-4-	exec函数族  
+4. exec函数族  
 	#include <unistd.h>  
 	extern **environ;  
 		int execl(const char *path, const char *arg, ...  
@@ -70,7 +70,7 @@
   
 		使用exec函数族时也应该注意刷新输出流缓冲	在调用exec前使用fflush();  
   
-5-	用户权限以及组权限  
+5. 用户权限以及组权限  
 	u+s	//可执行文件有这个权限，当别的用户调用当前可执行文件的时候用户会切换为当前用户的user  
 		uid  
 			realuid  
@@ -98,30 +98,30 @@
 	int setreuid(uid_t ruid, uid_t euid);	//原子化的交换ruid与euid  
 	int setregid(gid_t rgid, gid_t egid);	//原子化的交换rgid与egid  
   
-6-	观摩：解释器文件  
+6. 观摩：解释器文件  
 	解释器文件 - 脚本文件 #!/bin/bash  
 	/etc/passwd文件中设置winguest:x:1001:1001::/home/winshare:/usr/bin/top -S  
 	限制用户登录shell为/usr/bin/top，并以安全模式登录  
   
   
-7-	system();  
+7. system();  
 	#include <stdlib.h>  
 	int system(const chat *command);  
 	调用shell执行一个shell命令,相当于对fork() / exec() / wait() 函数的一个封装  
   
-8-	进程会计  
+8. 进程会计  
 	统计进程占用资源量  
 	#include <unistd.h>  
 	int acct(const chat *filename);  
 	UNIX系统方言，不是POSIX协议中的函数	，不可移植  
   
-9-	进程时间  
+9. 进程时间  
 	#include <sys/times.h>  
 	clock_t times(struct tms *buf);  
 	clock_t类型为clock ticks数(滴答数 / 系统心跳)，使用宏  
 		sysconf(_SC_CLK_TCK);可以检测每秒钟有多少system ticks数  
   
-10- 守护进程	写守护进程一定要写系统日志！！！！！  
+10. 守护进程	写守护进程一定要写系统日志！！！！！  
   
 	守护进程一般脱离控制终端而存在  
 	PPID为1、PID、PGID、SID相同，并且TTY项为？的进程是守护进程  
@@ -151,7 +151,7 @@
   
   
   
-11-	系统日志的书写  
+11. 系统日志的书写  
 	syslogd服务  
 	系统日志格式由syslogd服务来控制  
   
