@@ -15,34 +15,33 @@
 					printf("hello!\n");  
 				}  
 			这段程序执行后#echo $?的输出值为7(print函数的返回值为显示字节数)  
-  
+
 		2. 调用exit  
 			>exit()函数能带回去的值只有256种  
 			调用exit时会执行钩子函数  
-  
-  
+
 		3. 调用_exit或者_Exit  
 			>导致当前进程正常终止  
 			不执行【钩子函数】也不执行【IO清理】  
 			在出错了什么都不敢动的情况下使用_exit函数  
-  
+
 		4. 最后一个线程从其启动例程返回  
 		5. 最后一个线程调用pthread_exit  
-  
+
 	- 异常终止：  
 		6.	调用abort  
 		7.	接到一个信号并终止  
 		8.	最后一个线程对其取消请求作出相应  
-  
+
 	#include <stdlib.h>  
 	int atexit(void (*function)(void))：钩子函数  
 	on_exit()函数也是  
-  
-  
+
+
 - 命令行参数的分析  
 	>getopt()  
 	getopt_long()  
-  
+
 - 环境变量  
 	>KEY = value  
 	shell的外部命令-在磁盘上存储的二进制文件  
@@ -60,7 +59,7 @@
 		setenv()	改变或添加环境变量值  
 		unsetenv()	删除环境变量  
 		putenv()  
-  
+
 C程序的存储空间布局  
 	32Bit - 4G  
 		4G|---------|  
@@ -95,9 +94,9 @@ C程序的存储空间布局
 		char *dlerror(void);  
 		void *dlsym(void *handle, const char *symbol);  
 		链接时使用-ldl选项  
-		  
+
 - 函数的跳转  
 	>setjmp();	//设置跳转点  
 	longjmp();	//从某一位置跳回到某一跳转点  
-  
+
 - 资源的获取与控制  
