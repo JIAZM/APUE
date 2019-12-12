@@ -6,7 +6,7 @@
 
 +	__线程的概念__  
 	><u>***线程：一个正在运行的函数***</u>  
-	>***POSIX线程是一套标准，而不是实现***  
+	>***POSIX((Portable Operating System Interface of UNIX, 可移植操作系统接口)线程是一套标准，而不是实现***  
 	>***openmp线程***  
 	>***线程标识:pthread_t - 只是一个标识，具体什么类型各家自己实现***  
 ---  
@@ -90,33 +90,52 @@
 
 	- 信号量  
 	>区别于互斥量，互斥量以独占形式来使用某一资源  
-	## 哲学家就餐问题  
-		- 使用互斥量 + 条件变量实现信号量  
-		>具体实现见视频94.6-2-5线程-信号量  
+	## ***哲学家就餐问题***  
+	使用互斥量 + 条件变量实现信号量  
+	>具体实现见视频94.6-2-5线程-信号量  
+
+	- 读写锁  
+		>读锁->共享锁  写锁->互斥锁  
 
 + __线程属性__  
+	>`int pthread_create(pthread_t, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arg);`函数中的attr参数  
+	- 初始化线程属性  
+		>`int pthread_attr_init(pthread_attr_t *attr);`  
+	- 销毁线程属性  
+		>`int pthread_attr_destroy(pthread_attr_t *attr);`  
+	## ***线程间通信比进程间通信更快***  
+## ***#pmap命令 - 查看进程空间的分布情况***  
 	
 - __线程同步的属性__  
+	- 互斥量属性  
+
+	- 条件变量属性  
 
 + __重入__  
+	+ 线程安全  
+	>先有标准后有实现，POSIX规定如果发布出来一个库，那么这个库应该本身支持多线程并发，否则要在名字上体现出来  
+	+ 多线程中的IO  
+		>标准IO都支持多线程并发  
+		例：puts("aaaa");先锁住缓冲区再向缓冲区中写入数据，再解锁
 
 - __线程与信号__  
+	>以线程位单位，线程是如何实现的? - 见笔记  
+	- 设置线程mask  
+		>`int pthread_sigmask(int how, const sigset_t *set, sigset_t *pldset);`  
+	>#include <signal.h>
+	- 等待信号  
+		>`int sigwait(const sigset_t *set, int *sig);`  
+	- 发送信号  
+		>`int pthread_kill(pthread_t thread, int sig);`  
 
 - __线程与fork__  
+	- 不同线程源语中fork产生的结果不一定是一样的  
 
+---
 
+# 其他线程标准  
++ openmp线程标准  
+	>www.OpenMP.org  
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	不是从语言角度实现，也不是函数级别的实现
+	借助编译器实现并发，gcc4.0以后的版本都能支持OpenMP的语法标记  
