@@ -2,11 +2,10 @@ TGT=relayer
 SRC=Relay_Engine.c main.c
 OBJ=Relay_Engine.o main.o
 CC=gcc
-CFLAGS+=-pthread
-LDFLAGS+=-pthread
+LIBS=-lpthread
 
 $(TGT):$(OBJ)
-	$(CC)	$^ -o	$@	$(CFLAGS)	$(LDFLAGS)
+	$(CC)	$^ -o	$@	$(LIBS)
 
 clean:
 	rm -rf $(OBJ) $(TGT)
