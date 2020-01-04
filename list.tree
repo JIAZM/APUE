@@ -49,6 +49,15 @@
 │   │   ├── thread_prime
 │   │   └── thread_prime.c
 │   └── thread.md
+├── IPC
+│   ├── ipc.md
+│   ├── pipe
+│   │   ├── pipe
+│   │   ├── pipe.c
+│   │   ├── player_phony.c
+│   │   └── tmpfifo
+│   ├── socket
+│   └── xsi
 ├── list.tree
 ├── mmap
 │   ├── aaa
@@ -56,6 +65,10 @@
 │   ├── read.c
 │   ├── write
 │   └── write.c
+├── mypipe
+│   ├── mypipe.c
+│   ├── mypipe.h
+│   └── pipe.md
 ├── process
 │   ├── alterfork
 │   ├── alterfork.c
@@ -115,4 +128,4 @@
         ├── readmem.c
         └── readmem.o
 
-20 directories, 95 files
+25 directories, 103 files
