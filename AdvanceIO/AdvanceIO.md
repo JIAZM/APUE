@@ -106,4 +106,59 @@
 
 3. 其他读写函数
 
+   ```C
+   #include <sys/uio.h>
+   /*
+    *操作空间不是一块连续的地址空间，将多个碎片的小地址写进同一个文件中去
+    */
+   ssize_t readv(int fd, const struct iovec *io, int iovcnt);
+   ssize_t writev(int fd, const struct iovec *iov, int iovcnt);
+   ssize preadv(int fd, const struct iovec *iov, int iovcnt, off_t offset);
+   ssize_t pwritev(int fd, const struct iovec *iov, int iovcnt, off_t offset);
+   ssize_t preadv2(int fd, const struct iovec *iov, int iovcnt, off_t offset, int flags);
+   ssize_t pwritev2(int fd, const struct iovec *iov, int iovcnt, off_t offset, int flags);
+   /**********iovec结构体**********/
+   	struct iovec{
+           void *iov_base;
+           size_t iov_len;
+       };
+   
+   /***************readn & writen***************/
+   //APUE作者自己杜撰出来的两个功能
+   //不是发布出来的标准函数
+   //其实就是坚持读够/写够n个字节的功能
+   ```
+
 4. 存储映射IO
+
+   + 函数
+
+     ```C
+     #include <sys/mman.h>
+     //从fd文件的offset偏移量开始映射length个字节到addr地址
+     void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset);
+     
+     /*
+      *flags参数--位图
+      *MAP_ANONYMOUS 匿名映射
+      */
+     int munmap(void *addr, size_t length);
+     ```
+
+   + 使用mmap函数进行进程间通信
+
+     > 进程间通信存在竞争问题，需要有协议来规避
+
+   
+
+5. 文件锁
+
+   > 通过文件描述符对文件加锁，是反映在inode层面，而不是文件结构体的层面
+   >
+   > 加锁后通过另外一个文件描述符close文件可能会造成文件意外解锁
+
+   ```C
+   #include <sys/file.h>
+   
+   int flock(int fd, int operation);
+   ```
