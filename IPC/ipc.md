@@ -25,14 +25,12 @@
 
    + 匿名管道：在文件系统不存在
 
-  ```C
+     ```C
      #include <unistd.h>
-  int pipe(int pipefd[2]);
+     int pipe(int pipefd[2]);
      //参数pipefd[0]为读端
-  //参数pipefd[1]为写端
-  ```
-
-​     
+     //参数pipefd[1]为写端     
+     ```
 
    + 命名管道：磁盘上文件类型为P的文件
    
@@ -45,4 +43,3 @@
      ```
      
      
-
