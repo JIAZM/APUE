@@ -161,4 +161,7 @@
    #include <sys/file.h>
    
    int flock(int fd, int operation);
+   
+   #include <unistd.h>
+   int lockf(int fd, int cmd, off_t len);
    ```
