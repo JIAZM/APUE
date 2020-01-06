@@ -1,8 +1,10 @@
 # 进程环境  
-  
->main函数  
->int main(int argc, char *argv[]);  
-  
+
+```C
+//main函数  
+int main(int argc, char *argv[]);  
+```
+
 - 进程的终止  
 	- 正常终止：  
 		1. 从main函数返回  
@@ -33,70 +35,93 @@
 		7.	接到一个信号并终止  
 		8.	最后一个线程对其取消请求作出相应  
 
+	```C
 	#include <stdlib.h>  
 	int atexit(void (*function)(void))：钩子函数  
 	on_exit()函数也是  
+	```
 
 
 - 命令行参数的分析  
-	>getopt()  
-	getopt_long()  
-
+	```C
+	getopt()  
+getopt_long()  
+	```
+	
 - 环境变量  
-	>KEY = value  
-	shell的外部命令-在磁盘上存储的二进制文件  
-	- 在C语言中使用环境变量：  
-		>extern char **environ;  
-		int main()  
-		{  
-			for(int i = 0; environ[i] != NULL; i++)  
-				puts(environ[i]);  
-			exit(0);  
-		}  
-
+	> KEY = value  
+	> shell的外部命令-在磁盘上存储的二进制文件  
+	
+	+ 在C语言中使用环境变量
+	
+	  ```C
+	  extern char **environ;  
+	  int main()  
+	  {  
+	      for(int i = 0; environ[i] != NULL; i++)  
+          puts(environ[i]);  
+	      exit(0);  
+	  }  
+	  ```
+	
 	- 函数：  
-		>getenv()	获取环境变量  
-		setenv()	改变或添加环境变量值  
-		unsetenv()	删除环境变量  
-		putenv()  
+		```C
+		getenv()	//获取环境变量
+		setenv()	//改变或添加环境变量值
+		unsetenv()	//删除环境变量
+		putenv()
+		```
 
-C程序的存储空间布局  
-	32Bit - 4G  
-		4G|---------|  
-		  |			|  
-		3G|---------|------0xC0000000  
-		  |argv/env |  
-		  |---------|  
-		  |栈区     |  
-		  |---------|  
-		  |	加载库	|  
-		  |			|  
-		  |---------|  
-		  |堆		|  
-		  |---------|  
-		  |BSS		|  
-		  |---------|  
-		  |已初始化 |  
-		  |---------|  
-		  |Text段	|  
-		 -|---------|------0x08048000  
-		  |			|  
-		0-|_________|  
+<u>***C程序的存储空间布局***</u>  
+
+```C
+/*
+ *32Bit - 4G
+ */
+
+4G	|-----------|
+	|			|
+3G	|-----------|------0xC0000000
+	|argv/env	|
+	|-----------|
+	|	STACK	|
+	|-----------|
+	|	加载库   |
+	|			|
+	|-----------|
+	|   HEAP	|
+	|-----------|
+	|   BSS		|
+	|-----------|
+	|Initialized|
+	|-----------|
+	|   Text	|
+	|-----------|------0x08048000
+	|			|
+0G	|___________|------0x00000000
+```
+
 # #pmap 命令查看进程地址  
 
 - 库  
 	- 动态库  
+	
 	- 静态库  
+	
 	- 手工装载库  
-		>#include <dlfcn.h>  
+		```C
+		#include <dlfcn.h>  
 		void *dlopen(const char *filename, int flag);  
 		int dlclose(void *handle);  
-		char *dlerror(void);  
+	char *dlerror(void);  
 		void *dlsym(void *handle, const char *symbol);  
 		链接时使用-ldl选项  
-
+		```
+	
 - 函数的跳转  
-	>setjmp();	//设置跳转点  
-	longjmp();	//从某一位置跳回到某一跳转点  
-
+	```C
+	setjmp();	//设置跳转点  
+longjmp();	//从某一位置跳回到某一跳转点  
+	```
+	
 - 资源的获取与控制  
