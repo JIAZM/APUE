@@ -15,16 +15,15 @@ int main(int argc, char *argv[]);
 			
 			```C
 			int main()  
-			{  
-				printf("hello!\n");  
-}
-			//这段程序执行后#echo $?的输出值为7(print函数的返回值为显示字节数)
+			{
+				printf("hello!\n");
+			}//这段程序执行后#echo $?的输出值为7(print函数的返回值为显示字节数)
 			```
 			
 2. 调用exit  
 			>exit()函数能带回去的值只有256种  
 			调用exit时会执行钩子函数  
-		
+	
 		3. 调用_exit或者_Exit  
 	>导致当前进程正常终止  
 			不执行【钩子函数】也不执行【IO清理】  
@@ -33,7 +32,7 @@ int main(int argc, char *argv[]);
 		4. 最后一个线程从其启动例程返回  
 		
 		5. 最后一个线程调用pthread_exit  
-		
+	
 - 异常终止：  
 		6.	调用abort  
 		7.	接到一个信号并终止  
