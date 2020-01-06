@@ -48,7 +48,7 @@ int main(int argc, char *argv[]);
 - 命令行参数的分析  
 	```C
 	#include <unistd.h>
-int getopt(int argc, char *const argv[], const char *optstring);
+	int getopt(int argc, char *const argv[], const char *optstring);
 	
 	extern char *optarg;
 	extern int optind, opterr, optopt;
@@ -81,10 +81,12 @@ int getopt(int argc, char *const argv[], const char *optstring);
 	
 	- 函数：  
 		```C
-		getenv()	//获取环境变量
-		setenv()	//改变或添加环境变量值
-		unsetenv()	//删除环境变量
-		putenv()
+		#include <stdlib.h>
+		
+		char *getenv(const char *name);	//获取环境变量
+		int setenv(const char *name, const char *value, int overwrite);	//改变或添加环境变量值
+		int unsetenv(const char *name);	//删除环境变量
+		int putenv(char *string);
 		```
 
 <u>***C程序的存储空间布局***</u>  
@@ -128,7 +130,7 @@ int getopt(int argc, char *const argv[], const char *optstring);
 		#include <dlfcn.h>  
 		void *dlopen(const char *filename, int flag);  
 		int dlclose(void *handle);  
-	char *dlerror(void);  
+		char *dlerror(void);  
 		void *dlsym(void *handle, const char *symbol);  
 		链接时使用-ldl选项  
 		```
@@ -136,7 +138,7 @@ int getopt(int argc, char *const argv[], const char *optstring);
 - 函数的跳转  
 	```C
 	setjmp();	//设置跳转点  
-longjmp();	//从某一位置跳回到某一跳转点  
+	longjmp();	//从某一位置跳回到某一跳转点  
 	```
 	
 - 资源的获取与控制  
