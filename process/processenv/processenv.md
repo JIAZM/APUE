@@ -11,30 +11,34 @@ int main(int argc, char *argv[]);
 			>规定main必须作为当前进程的入口函数与出口函数  
 			return 0;是给当前进程的父进程看的  
 			如果程序中没有return语句则返回值为程序中最后一条语句的返回值  
-			例：  
-				int main()  
-				{  
-					printf("hello!\n");  
-				}  
-			这段程序执行后#echo $?的输出值为7(print函数的返回值为显示字节数)  
-
-		2. 调用exit  
+			例:
+			
+			```C
+			int main()  
+			{  
+				printf("hello!\n");  
+}
+			//这段程序执行后#echo $?的输出值为7(print函数的返回值为显示字节数)
+			```
+			
+2. 调用exit  
 			>exit()函数能带回去的值只有256种  
 			调用exit时会执行钩子函数  
-
+		
 		3. 调用_exit或者_Exit  
-			>导致当前进程正常终止  
+	>导致当前进程正常终止  
 			不执行【钩子函数】也不执行【IO清理】  
 			在出错了什么都不敢动的情况下使用_exit函数  
 
 		4. 最后一个线程从其启动例程返回  
+		
 		5. 最后一个线程调用pthread_exit  
-
-	- 异常终止：  
+		
+- 异常终止：  
 		6.	调用abort  
 		7.	接到一个信号并终止  
 		8.	最后一个线程对其取消请求作出相应  
-
+	
 	```C
 	#include <stdlib.h>  
 	int atexit(void (*function)(void))：钩子函数  
@@ -44,13 +48,25 @@ int main(int argc, char *argv[]);
 
 - 命令行参数的分析  
 	```C
-	getopt()  
-getopt_long()  
+	#include <unistd.h>
+int getopt(int argc, char *const argv[], const char *optstring);
+	
+	extern char *optarg;
+	extern int optind, opterr, optopt;
+	
+	#include <getopt.h>
+	int getopt_long(int argc, char * const argv[],
+					const char *optstring,
+					const struct option *longopts, int *longindex);
+	
+	int getopt_long_only(int argc, char * const argv[],
+						const char *optstring,
+						const struct option *longopts, int *longindex);
 	```
 	
 - 环境变量  
 	> KEY = value  
-	> shell的外部命令-在磁盘上存储的二进制文件  
+	> shell的外部命令-在磁盘上存储的二进制文件
 	
 	+ 在C语言中使用环境变量
 	
