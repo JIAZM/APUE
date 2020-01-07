@@ -96,7 +96,7 @@
     ├── dirops
     │   ├── glob
     │   ├── glob.c
-    │   ├── link&dirops
+    │   ├── link&dirops.md
     │   ├── readdir
     │   └── readdir.c
     ├── filesystem
@@ -105,22 +105,21 @@
     │   │   ├── dup
     │   │   ├── dup.c
     │   │   ├── dup.o
-    │   │   ├── dupoperation
+    │   │   ├── dupoperation.md
     │   │   └── makefile
     │   ├── fileio
     │   │   ├── 1
     │   │   ├── apue.h
     │   │   ├── dir
     │   │   ├── dir.c
+    │   │   ├── filedescriptor.md
     │   │   ├── makefile
     │   │   ├── mycpy
     │   │   ├── mycpy.c
-    │   │   ├── mycpy.o
-    │   │   └── note
-    │   │       └── filedescriptor
+    │   │   └── mycpy.o
     │   └── sync
     │       ├── makefile
-    │       └── sync
+    │       └── sync.md
     └── readfile
         ├── apue.h
         ├── makefile
@@ -128,4 +127,4 @@
         ├── readmem.c
         └── readmem.o
 
-25 directories, 103 files
+24 directories, 103 files
