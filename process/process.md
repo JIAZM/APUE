@@ -4,14 +4,14 @@
 
 1. 进程标识符 pid  
 	类型pid_t	//传统意义上是有符号16位整型数  
-	
-	```shell
-	$ ps axf  
-	$ ps axm  
+
+  ```shell
+  $ ps axf  
+  $ ps axm  
   $ ps ax -L  
-	```
+  ```
 	
-	进程标识顺次向下使用，与文件描述符不同，不是使用当前可用的最小的  
+  进程标识顺次向下使用，与文件描述符不同，不是使用当前可用的最小的  
 	
   ```C
   #include <sys/types.h>
@@ -62,7 +62,7 @@
   #include <sys/wait.h>  
   pid_t wait(int *status);	//死等  
   pid_t waitpid(pid_t pid, int *status, int options);	  
-  	//等待进程状态发生改变  
+  //等待进程状态发生改变  
   
   waitid();  
   wwait3();  
@@ -77,49 +77,44 @@
 
 
 4. exec函数族
-	
-	```C
-	#include <unistd.h>  
-	extern **environ;  
-	int execl(const char *path, const char *arg, ...  
-	          /* (char  *) NULL */);  
-	int execlp(const char *file, const char *arg, ...  
-	           /* (char  *) NULL */);  
-	int execle(const char *path, const char *arg, ...  
-	           /*, (char *) NULL, char * const envp[] */);  
-	//以上三个都是定参的实现，参数从argv[0]开始，以NULL结束  
-	int execv(const char *path, char *const argv[]);  
-	int execvp(const char *file, char *const argv[]);  
-	int execvpe(const char *file, char *const argv[],  
-              char *const envp[]);  
-	//以上三个才是变参的实现  
-  ```
-  
-  <u>***使用exec函数族时也应该注意刷新输出流缓冲	在调用exec前使用fflush();***</u>
-  
-  
-  
-5. 用户权限以及组权限  
+```C
+#include <unistd.h>  
+extern **environ;  
+int execl(const char *path, const char *arg, ...  
+          /* (char  *) NULL */);  
+int execlp(const char *file, const char *arg, ...  
+            /* (char  *) NULL */);  
+int execle(const char *path, const char *arg, ...  
+            /*, (char *) NULL, char * const envp[] */);  
+//以上三个都是定参的实现，参数从argv[0]开始，以NULL结束  
+int execv(const char *path, char *const argv[]);  
+int execvp(const char *file, char *const argv[]);  
+int execvpe(const char *file, char *const argv[],  
+            char *const envp[]);  
+//以上三个才是变参的实现  
+```
+<u>***使用exec函数族时也应该注意刷新输出流缓冲	在调用exec前使用fflush();***</u>  
 
-  ```shell
-  u+s	//可执行文件有这个权限，当别的用户调用当前可执行文件的时候用户会切换为当前用户的user 
-  ```
+5. 用户权限以及组权限
+```shell
+$ u+s	#可执行文件有这个权限，当别的用户调用当前可执行文件的时候用户会切换为当前用户的user 
+```
+  + ​uid  
+    > realuid  
+    > effectiveuid	//检测的是effectiveuid  
+    > saveuid	//可以没有  
 
-  ​	uid  
-  ​		realuid  
-  ​		effectiveuid	//检测的是effectiveuid  
-  ​		saveuid	//可以没有  
+```shell
+$ g+s	#可执行文件有这个权限，当别的用户调用当前可执行文件的时候用户组会切换为当前用户同组权限
+```
 
-  ```shell
-  g+s	//可执行文件有这个权限，当别的用户调用当前可执行文件的时候用户组会切换为当前用户同组权限
-  ```
-
-  ​	gid  
-  ​		real  
-  ​		effective  
-  ​		save	//可以没有  
-  init产生的时候还是root权限  
-  ​	fork()+exec() --> getey进程 -->exec() -->login()输入用户名密码等登录信息后 成功 -->fork()+exec() -->产生shell (带着r e s三种权限)  
+  + gid  
+    > real  
+    > effective  
+    > save	//可以没有  
+  
+  + init产生的时候还是root权限  
+    > fork()+exec() --> getey进程 -->exec() -->login()输入用户名密码等登录信息后 成功 -->fork()+exec() -->产生shell (带着r e s三种权限)  
 
   ```C
   uid_t getuid(void);	//返回进程的实际用户id  
@@ -151,75 +146,75 @@
 
 7. system();
 	
-	```C
-	#include <stdlib.h>  
-  int system(const chat *command);  
-  ```
+```C
+#include <stdlib.h>  
+int system(const chat *command);  
+```
   
-  <u>***调用shell执行一个shell命令,相当于对fork() / exec() / wait() 函数的一个封装***</u>
+<u>***调用shell执行一个shell命令,相当于对fork() / exec() / wait() 函数的一个封装***</u>
   
-8. 进程会计
-  统计进程占用资源量  
+8. 进程会计  
+统计进程占用资源量  
 
-  ```C
-  #include <unistd.h>
-  int acct(const chat *filename);
-  ```
+```C
+#include <unistd.h>
+int acct(const chat *filename);
+```
 
-  <u>***UNIX系统方言，不是POSIX协议中的函数	，不可移植***</u>
+<u>***UNIX系统方言，不是POSIX协议中的函数	，不可移植***</u>
 
 9. 进程时间
 
-  ```C
-  #include <sys/times.h>  
-  clock_t times(struct tms *buf);  
-  //clock_t类型为clock ticks数(滴答数 / 系统心跳)，使用宏  
-  sysconf(_SC_CLK_TCK);
-  //可以检测每秒钟有多少system ticks数
-  ```
+```C
+#include <sys/times.h>  
+clock_t times(struct tms *buf);  
+//clock_t类型为clock ticks数(滴答数 / 系统心跳)，使用宏  
+sysconf(_SC_CLK_TCK);
+//可以检测每秒钟有多少system ticks数
+```
 
 10. 守护进程
 
-    <u>***写守护进程一定要写系统日志！！！！！***</u>  
+  <u>***写守护进程一定要写系统日志！！！！！***</u>  
 
-    <u>***守护进程一般脱离控制终端而存在***</u>  
+  <u>***守护进程一般脱离控制终端而存在***</u>  
 
-    <u>***PPID为1、PID、PGID、SID相同，并且TTY项为？的进程是守护进程***</u>  
-    <u>***守护进程一般都是一个会话的leader***</u>  
+  <u>***PPID为1、PID、PGID、SID相同，并且TTY项为？的进程是守护进程***</u>  
+  <u>***守护进程一般都是一个会话的leader***</u>  
 
-    + 会话：session,标识sid  
-      	一个终端的登录产生了一个标准的会话形式  
+  + 会话：session,标识sid  
+    一个终端的登录产生了一个标准的会话形式  
 
-    + 终端：  
-      	真正意义上的终端是一个本设备	真正的终端只负责输入与输出  
+  + 终端：  
+    真正意义上的终端是一个本设备	真正的终端只负责输入与输出  
 
-    + 前台进程组 / 后台进程组  
-      	前台进程组能够使用标准输入	如果企图把标准输入给后台进程，将会杀掉后台运行的进程  
+  + 前台进程组 / 后台进程组  
+    前台进程组能够使用标准输入	如果企图把标准输入给后台进程，将会杀掉后台运行的进程  
 
-    ```C
-    #include <unistd.h>  
-    /**********标准UNIX调用************/  
-    pid_t setsid(void);  
-    pid_t getpgid(pid_t pid);	//获取某一个指定进程的进程组ID  
-    pid_t setpgid(pid_t pid);	//设置指定进程到指定进程组中  
-    	调用方会成为当前进程组的leader并且脱离控制终端  
-    /**********方言************/  
-    pid_t getpgrp(void);	//返回当前进程所在进程组的ID  
-    pid_t getpgrp(psid_t pid);	//查看一个指定的进程所属的进程组是哪一个  
-    ```
+  ```C
+  #include <unistd.h>  
+  /**********标准UNIX调用************/  
+  pid_t setsid(void);  
+  pid_t getpgid(pid_t pid);	//获取某一个指定进程的进程组ID  
+  pid_t setpgid(pid_t pid);	//设置指定进程到指定进程组中  
+    调用方会成为当前进程组的leader并且脱离控制终端  
+  /**********方言************/  
+  pid_t getpgrp(void);	//返回当前进程所在进程组的ID  
+  pid_t getpgrp(psid_t pid);	//查看一个指定的进程所属的进程组是哪一个  
+  ```
 
-#	单实例守护进程：锁文件/var/run/<名字>.pid    
+#	单实例守护进程：锁文件/var/run/\<name\>.pid    
 #	启动脚本文件：	/etc/rc.d/rc.local  
 
   
 
 11. 系统日志的书写  
-	<u>***syslogd服务***</u>  
-	<u>***系统日志格式由syslogd服务来控制***</u>  
-  
-	```C
+  <u>***syslogd服务***</u>  
+  <u>***系统日志格式由syslogd服务来控制***</u>  
+
+  ```C
   #include <syslog.h>  
-	void openlog(const char *ident, int option, int facility);  
-	void syslog(int [riority, const char *format, ...);  
-	void closelog(void);  
-	```
+  void openlog(const char *ident, int option, int facility);  
+  void syslog(int [riority, const char *format, ...);  
+  void closelog(void);  
+  ```
