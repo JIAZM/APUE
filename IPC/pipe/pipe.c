@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
 	}
 	else{			//父进程读数据写入管道
 		close(pd[0]);
-		write(1, "hello!", 6);
+		write(1, "hello!\r\n", 8);
 		close(pd[1]);
 		wait(NULL);
 		exit(0);
