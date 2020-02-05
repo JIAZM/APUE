@@ -42,5 +42,68 @@
      #include <sys/stat.h>
      int mkfifo(const char *pathname, mode_t mode);
      ```
-     
-     
+2.  XSI -> SysV  
+    > IPC -> Inter-Process Communication  
+    > 主动端　(先发包的一端)　＆　被动端　(先收包的一端)　　
+
+    ```shell
+    $ipcs  #查看当前消息队列
+    ```
+
+    + 三种通信方式(有没有亲缘关系的进程间通信都能用)
+      + Message Queues          (msqid)
+      + Semaphore Arrays        (semid)
+      + Shared Memory Segments  (shmid)
+    + key - 确定通信双方拿到同一个消息队列(通信机制)
+      + 函数：ftok();
+        ```C
+        #include <sys/types.h>
+        #include <sys/ipc.h>
+
+        key_t ftok(const char *pathname, int proj_id);
+        //从文件inod着手
+
+        /*
+         * XSI函数族命名规律
+         * xxxget(创建)  xxxop(使用)   xxxctl(其他控制 / 销毁)
+         * xxx -> msg sem shm   (三种机制)
+         */
+        ```
+        ```mermaid
+        graph LR
+            xxx_keyfile&proj_id --ftok--> key
+        ```
+    + Messege Queue
+      > 消息队列 - 双工  
+      > 有缓存消息的能力　-　缓存空间见    $ulimit -a
+      + msgget()
+      ```C
+        #include <sys/types.h>
+        #include <sys/ipc.h>
+        #include <sys/msg.h>
+
+        int msgget(key_t key, int msgflg);
+      ```
+      + msgop
+      ```C
+        #include <sys/types.h>
+        #include <sys/ipc.h>
+        #include <sys/msg.h>
+
+        int msgsnd(int msqid, const void *msgp, size_t msgsz, int msgflg);
+
+        ssize_t msgrcv(int msqid, void *msgp, size_t msgsz, long msgtyp, int msgflg);
+
+        struct msgbuf {
+               long mtype;       /* message type, must be > 0 */
+               char mtext[1];    /* message data */
+        };
+      ```
+      + msgctl()
+      ```C
+        #include <sys/types.h>
+        #include <sys/ipc.h>
+        #include <sys/msg.h>
+
+        int msgctl(int msqid, int cmd, struct msqid_ds *buf);
+      ```
