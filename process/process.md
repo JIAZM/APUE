@@ -2,9 +2,8 @@
 
 <u>***已经进入多进程阶段，不涉及到并发***</u>
 
-1. 进程标识符 pid  
-	类型pid_t	//传统意义上是有符号16位整型数  
-
+1. 进程标识符 pid  类型pid_t - 传统意义上是有符号16位整型数
+	
   ```shell
   $ ps axf  
   $ ps axm  
@@ -16,8 +15,8 @@
   ```C
   #include <sys/types.h>
   #include <unistd.h>
-  getpid();
-  getppid();
+  pid_t getpid(void);
+  pid_t getppid(void);
   ```
   
 2. 进程如何产生
@@ -27,30 +26,34 @@
   pid_t fork(void);
   ```
 
-  父进程通过复制自己的方式形成子进程，关键字duplicating意味着拷贝、克隆、一模一样等含义  
-  fork后父子进程的区别：fork的返回值不一样，pid不同，ppid也不相同，未决信号和文件锁不继承，资源利用量清零  
+  > 父进程通过复制自己的方式形成子进程，关键字duplicating意味着拷贝、克隆、一模一样等含义  
+  > fork后父子进程的区别：fork的返回值不一样，pid不同，ppid也不相同，未决信号和文件锁不继承，资源利用量清零  
+
   ***init进程***:  
-
-  + init产生之前内核是一个程序在跑，init产生之后内核变成一个库守在后台，出现异常时产生调用  
-
-  + 是所有进程的祖先进程  
-  + 1号进程  
+   + init产生之前内核是一个程序在跑，init产生之后内核变成一个库守在后台，出现异常时产生调用  
+   + 是所有进程的祖先进程  
+   + 1号进程  
 
   ***fork之前要刷新一下当前打开的所有输出流***:
 
   ```C
-  fflush(NULL);	//避免当前缓冲区中的缓冲被子进程使用  
+  fflush(NULL);	//避免当前缓冲区中的缓冲被子进程使用
+  #include <stdio.h>
+  int fflush(FILE *stream);
   ```
 
   调度器的调度策略决定那个进程先运行  
   子进程一定要有结束符，否则会陷入递归陷阱  
 
   ***vfork()***
-  	fork()函数copy了父进程的所有资源，但是对于工作需求小的进程代价过大  
-  	使用vfork()函数，子进程与父进程共享同一块数据  
+  > fork()函数copy了父进程的所有资源，但是对于工作需求小的进程代价过大  
+  > 使用vfork()函数，子进程与父进程共享同一块数据  
 
   ```C
-  fork()	//函数中加入了写实拷贝技术，将vfork()的功能加入进来，导致vfork()目前基本废弃。  
+  #include <sys/types.h>
+  #include <unistd.h>
+  pid_t fork(void);	//函数中加入了写实拷贝技术，将vfork()的功能加入进来，导致vfork()目前基本废弃
+  pid_t vfork(void);  //创建子进程 阻塞父进程
   ```
 
   父子进程的关系：除了最初子进程由父进程创建，其他的都相互独立，谁也不能到对方的空间拿什么东西  
@@ -60,37 +63,42 @@
   ```C
   #include <sys/types.h>  
   #include <sys/wait.h>  
-  pid_t wait(int *status);	//死等  
-  pid_t waitpid(pid_t pid, int *status, int options);	  
-  //等待进程状态发生改变  
+  pid_t wait(int *status);
+  pid_t waitpid(pid_t pid, int *status, int options);
+  int waitid(idtype_t idtype, id_t id, siginfo_t *infop, int options);
+  // 等待进程改变状态
+  // waitid 为 glibc 和 POSIX接口
   
-  waitid();  
-  wwait3();  
-  wait4();  
+  #include <sys/types.h>
+  #include <sys/time.h>
+  #include <sys/resource.h>
+  #include <sys/wait.h>
+  pid_t wait3(int *wstatus, int options, struct rusage *rusage);
+  pid_t wait4(pid_t pid, int *wstatus, int options, struct rusage *rusage);
+  // 这两个是 BSD 方言
   ```
 
   ***进程分配：***
-
-  + 分块
-  + 交叉分配
-  + 池类分配  
-
-
+   + 分块
+   + 交叉分配
+   + 池类分配
+  
 4. exec函数族
 ```C
 #include <unistd.h>  
 extern **environ;  
-int execl(const char *path, const char *arg, ...  
-          /* (char  *) NULL */);  
-int execlp(const char *file, const char *arg, ...  
-            /* (char  *) NULL */);  
-int execle(const char *path, const char *arg, ...  
-            /*, (char *) NULL, char * const envp[] */);  
-//以上三个都是定参的实现，参数从argv[0]开始，以NULL结束  
-int execv(const char *path, char *const argv[]);  
-int execvp(const char *file, char *const argv[]);  
-int execvpe(const char *file, char *const argv[],  
-            char *const envp[]);  
+int execl(const char *path, const char *arg, .../* (char  *) NULL */);
+int execlp(const char *file, const char *arg, .../* (char  *) NULL */);
+int execle(const char *path, const char *arg, ... 
+            /*, (char *) NULL, char * const envp[] */);
+
+//以上三个都是定参的实现，参数从argv[0]开始，以NULL结束
+
+int execv(const char *path, char *const argv[]);
+// 第一个参数为可执行文件路径，第二个参数为整个命令字符串指针
+int execvp(const char *file, char *const argv[]);
+// 地一个参数为可执行文件名(已经在环境变量中)， 第二个参数为整个命令字符串指针
+int execvpe(const char *file, char *const argv[], char *const envp[]);
 //以上三个才是变参的实现  
 ```
 <u>***使用exec函数族时也应该注意刷新输出流缓冲	在调用exec前使用fflush();***</u>  
@@ -103,7 +111,7 @@ $ u+s	#可执行文件有这个权限，当别的用户调用当前可执行文�
     > realuid  
     > effectiveuid	//检测的是effectiveuid  
     > saveuid	//可以没有  
-
+  
 ```shell
 $ g+s	#可执行文件有这个权限，当别的用户调用当前可执行文件的时候用户组会切换为当前用户同组权限
 ```
@@ -125,6 +133,7 @@ $ g+s	#可执行文件有这个权限，当别的用户调用当前可执行文�
   
   int setuid(uid_t uid);	//设置effective uid  
   int seteuid(uid_t uid);	//设置effective uid  
+  // 程序中使用setuid()函数设置uid时需要注意编译生成的可执行文件需要有对应uid的suid权限才能顺利执行
   int setgid(gid_t gid);  
   int setegid(gid_t gid);  
   
