@@ -71,26 +71,25 @@ int main(int argc, char *argv[]);
 	> shell的外部命令-在磁盘上存储的二进制文件
 	
 	+ 在C语言中使用环境变量
-	
-	  ```C
-	  extern char **environ;  
-	  int main()  
-	  {  
-	      for(int i = 0; environ[i] != NULL; i++)  
-          puts(environ[i]);  
-	      exit(0);  
-	  }  
-	  ```
-	
-	- 函数：  
 		```C
-		#include <stdlib.h>
-		
-		char *getenv(const char *name);	//获取环境变量
-		int setenv(const char *name, const char *value, int overwrite);	//改变或添加环境变量值
-		int unsetenv(const char *name);	//删除环境变量
-		int putenv(char *string);
+		extern char **environ;  
+		int main()  
+		{  
+			for(int i = 0; environ[i] != NULL; i++)  
+			puts(environ[i]);  
+			exit(0);  
+		}  
 		```
+	
+- 函数：  
+	```C
+	#include <stdlib.h>
+
+	char *getenv(const char *name);	//获取环境变量
+	int setenv(const char *name, const char *value, int overwrite);	//改变或添加环境变量值
+	int unsetenv(const char *name);	//删除环境变量
+	int putenv(char *string);
+	```
 
 <u>***C程序的存储空间布局***</u>  
 
