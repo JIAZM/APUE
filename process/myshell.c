@@ -19,8 +19,7 @@ int main(int argc, char *argv[])
 	while(1){
 		prompt();	//输出提示符
 
-		if(getline(&linebuf, &linebuf_size, stdin) < 0)	//读取一行命令
-		{
+		if(getline(&linebuf, &linebuf_size, stdin) < 0){	//读取一行命令
 			printf("getline() error ! \n");
 			break;
 		}
@@ -68,8 +67,8 @@ static void parse(char *line, cmd_st *res)
 			break;
 		if(tok[0] == '\0')
 			continue;
-
-		glob(tok, GLOB_NOCHECK | GLOB_APPEND * i, NULL, &res->globres);	//应该只有第一次不追加，以后每一次都追加
+		//应该只有第一次不追加，以后每一次都追加
+		glob(tok, GLOB_NOCHECK | GLOB_APPEND * i, NULL, &res->globres);	
 		i = 1;
 	}
 }
