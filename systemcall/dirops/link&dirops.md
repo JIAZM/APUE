@@ -55,6 +55,11 @@
 				int (*errfunc)(const char *epath, int errno), 
 				glob_t *pglob);
 	//main函数参数与命令行参数解析
+	/* glob函数搜索匹配 函数pattern中的参数，如/*是匹配根文件下的所有文件
+	 * （不包括隐藏文件，要找的隐藏文件需要从新匹配），然后会将匹配出的结果存放
+	 * 到 pglob，即第4个参数中，第二个参数能选择匹配模式，如是否排序，或者在函
+	 * 数第二次调用时，是否将匹配的内容追加到pglob中，等，第3个参数是查看错误信
+	 * 息用，一般置为NULL； */
 	void globfree(glob_t *pglob);
 	
 	glob();
