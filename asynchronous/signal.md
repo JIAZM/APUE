@@ -1,8 +1,7 @@
 # 并发(信号 - 初步异步 / 线程 - 强烈异步)  
   
 - 同步  
-	  
-  
+
 - 异步  
 	> 异步事件的处理：查询 / 通知  
 	> 异步事件发生频率低	使用通知法  
@@ -24,7 +23,7 @@
 	sighandler_t signal(int signum, sighandler_t handler);  
   
 	void (*signal(int signum, void (*handler)(int)))(int);  
-		//信号会打断阻塞的系统调用.  
+	//信号会打断阻塞的系统调用.
 	```
 
 3. 信号的不可靠  
@@ -50,63 +49,62 @@
 	#include <sys/types.h>  
 	#include <signal.h>  
 
-	int kill(pid_t pid, int sig);	//给一个进程发送信号  
-	int raise(int sig);	//给当前进程发送一个信号  
+	int kill(pid_t pid, int sig);	// 给一个进程发送信号
+	int raise(int sig);	// 给当前进程发送一个信号
 
-	#include <unistd.h>  
-	unsigned int alarm(unsigned int seconds);	#//没办法实现多任务的alarm  
-	//涉及时钟信号的情况时，signal()要发生在alarm()前  
+	#include <unistd.h>
+	// 没办法实现多任务的alarm
+	unsigned int alarm(unsigned int seconds);
+	// 涉及时钟信号的情况时，signal()要发生在alarm()前
 	pause();  
-	//在某些环境下sleep()是用alarm()+pause()封装实现的  
-	//使用alarm()函数实现slow cat流控
-	abort();  
+	// 在某些环境下sleep()是用alarm()+pause()封装实现的
+	// 使用alarm()函数实现slow cat流控
+
+	abort();
 	system();
 
-	sleep();的问题
+	// sleep();的问题
 	```
 
 7. 信号集
 	```C
-	#include <signal.h>  
-	//信号集类型	sigset_t  
-	int sigemptyset(sigset_t *set);	#//设为空集
-	int sigfillset(sigset_t *set);	#//设为全集  
+	#include <signal.h>
+	// 信号集类型	sigset_t
+	int sigemptyset(sigset_t *set);		//设为空集
+	int sigfillset(sigset_t *set);		//设为全集
 	int sigaddset(sigset_t *set, int signum);
-	//添加信号到信号集  
+	// 添加信号到信号集
 	int sigdelset(sigset_t *set, int signum);
-	//从信号集中删除信号  
+	// 从信号集中删除信号
 	int sigismember(const sigset_t *set, int signum);
-	//测试signum是否是set中的一员
+	// 测试signum是否是set中的一员
 	```
   
 8. 信号屏蔽字 / pending集 的处理
 	```C
-	#include <signal.h>  
+	#include <signal.h>
 	int sigprocmask(int how, const sigset_t *set, sigset_t *oldset);
-	//决定信号什么时候被响应  
+	// 决定信号什么时候被响应
 	int sigpending(sigset_t *set);
-	//到内核看pending位图
+	// 到内核看pending位图
 	
-	//不能从信号处理函数中随意的往外跳(setjmp();, longjmp();---------> 可能会错过mask信号屏蔽字恢复的过程)
+	// 不能从信号处理函数中随意的往外跳(setjmp();, longjmp();---------> 可能会错过mask信号屏蔽字恢复的过程)
 
-	/*
-	 *使用sigsetjmp();	siglongjmp();可以跳
-	 */
+	/* 使用sigsetjmp();	siglongjmp();可以跳 */
 	```
 	  
 9. 扩展
 	```C
-	#include <signal.h>  
-	int sigsuspend(const sigset_t *mask);	#//原子操作
-
-	sigaction();	//替换signal()函数  
+	#include <signal.h>
 	
-	/*
-	 *signal()函数的问题
-	 *多个信号共用同一个信号处理函数时实现的功能可以不一样，但是有重入的危险
-	 *重入可能会发生内存泄漏
-	 *在响应某一个信号时，要把其他信号都阻塞住
-	 */
+	int sigsuspend(const sigset_t *mask);	//原子操作
+
+	/* 替换signal()的函数
+	 *
+	 * signal()函数的问题
+	 * 多个信号共用同一个信号处理函数时实现的功能可以不一样，但是有重入的危险
+	 * 重入可能会发生内存泄漏
+	 * 在响应某一个信号时，要把其他信号都阻塞住 */
 	int sigaction(int signul, const struct sigaction *act, struct sigaction *oldact);
 
 	struct sigaction{
@@ -116,13 +114,19 @@
 		int sa_flags;
 		void (*sa_restorer)(void);
 	};
-	setitimer();	//替换alarm()函数
+	
+	// 使用setitimer()替换alarm()函数
+	#include <sys/timer.h>
+	int setitimer(int which, struct itimerval *new_value, 
+						struct itimerval *old_value);
+	
+	int getitimer(int which, struct itimerval *curr_value)
 
-	//getcontext()与setcontext()的问题  
+	//getcontext()与setcontext()的问题
 	#include <ucontext.h>
 	int getcontext(ucontext_t *ucp);
-	//获取一个现场，后续工作可以切换到其他现场工作  
-	int setcontext(const ucontext_t *ucp);	//还原一个可执行的现场  
+	//获取一个现场，后续工作可以切换到其他现场工作
+	int setcontext(const ucontext_t *ucp);	//还原一个可执行的现场
 	//在struct sigaction中的三参成员第三个（void *）的参数其实是 ucontext *ucp 类型
 	``` 
   
